@@ -33,19 +33,20 @@ const App = () => {
     <>
       <Header />
       <Switch>
-          <Route exact path='/'>
-            <Home />
-          </Route>
-          <Route path='/pizza'>
-            <Form
-              form={form} setForm={setForm}
-              errors={errors} setErrors={setErrors}
-              disabled={disabled} setDisabled={disabled}
-              order={order} setOrder={setOrder}
-            />
-          </Route>
+        <Route exact path='/'>
+          <Home />
+        </Route>
+        <Route path='/pizza'>
+          <Form 
+            form={form} setForm={setForm}
+            errors={errors} setErrors={setErrors}
+            disabled={disabled} setDisabled={setDisabled}
+            order={order} setOrder={setOrder}
+          />
+        </Route>
       </Switch>
     </>
   );
 };
+
 export default App;

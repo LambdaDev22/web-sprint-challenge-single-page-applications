@@ -5,7 +5,7 @@ import axios from "axios";
 
 const StyledForm = styled.form`
     margin-top: 10vh;
-    height: 40vh;
+    height: 40.755vh;
     display: flex;
     flex-direction: column;
     padding: 15% 0 15% 0;
@@ -25,13 +25,8 @@ const StyledForm = styled.form`
         margin: 5%;
     }
 
-    & label {
-        display: flex;
-        flex-direction: column;
-        margin: 5%;
-    }
-
     & #toppings-checklist {
+
         & .check-option {
             margin: 0;
             display: flex;
@@ -53,8 +48,8 @@ const schema = yup.object().shape({
     name: yup.string().required('name is required').min(2, 'name must be at least 2 characters'),
     size: yup.string().required('size is required'),
     pepperoni: yup.boolean(),
-    olives: yup.boolean(),
     onions: yup.boolean(),
+    olives: yup.boolean(),
     bacon: yup.boolean(),
     special: yup.string()
 })
@@ -69,40 +64,40 @@ function Form(props) {
 
     function setFormErrors(name, value) {
         yup.reach(schema, name).validate(value)
-        .then(() => props.setErrors({ ...props.errors, [name]: ''}))
-        .catch(err => props.setErrors({ ...props.errors, [name]: err.errors[0] }))
-};
-
-function submitHandler(evt) {
-    evt.preventDefault();
-    const newOrder = {
-        name: props.form.name.trim(),
-        size: props.form.size,
-        pepperoni: props.form.pepperoni,
-        olives: props.form.olives,
-        onions: props.form.onions,
-        bacon: props.form.bacon,
-        special: props.form.special
+            .then(() => props.setErrors({ ...props.errors, [name]: ''}))
+            .catch(err => props.setErrors({ ...props.errors, [name]: err.errors[0] }))
     };
 
-    axios.post('https://reqres.in/api/orders', newOrder)
-        .then(res => {
-            props.setForm({
-                name: '',
-                size: '',
-                pepperoni: false,
-                olives: false,
-                special: '',
-                onions: false,
-                bacon: false,
+    function submitHandler(evt) {
+        evt.preventDefault();
+        const newOrder = { 
+            name: props.form.name.trim(), 
+            size: props.form.size, 
+            pepperoni: props.form.pepperoni,
+            onions: props.form.onions,
+            olives: props.form.olives,
+            bacon: props.form.bacon,
+            special: props.form.special
+        };
+        axios.post('https://reqres.in/api/orders', newOrder)
+            .then(res => {
+                props.setForm({ 
+                    name: '',
+                    size: '',
+                    pepperoni: false,
+                    onions: false,
+                    olives: false,
+                    bacon: false,
+                    special: ''
+                })
+                props.setOrder([ ...props.order, res.data ])
             })
-        props.setOrder([ ...props.order, res.data])
-    })
-    .catch(err => {console.error(err)})
-};
+            .catch(err => {console.error(err)})
+    };
 
-useEffect (() => {
-    schema.isValid(props.form).then(valid => props.setDisabled(!valid))}, [props.form])
+    useEffect (() => {
+        schema.isValid(props.form).then(valid => props.setDisabled(!valid))
+    }, [props.form])
 
     return (
         <StyledForm id="pizza-form" onSubmit={submitHandler}>
